@@ -1,0 +1,61 @@
+---
+- name: Ensure nginx, docker, pip are installed
+  package:
+    name:
+      - nginx
+      - docker.io
+      - python3-pip
+    state: present
+
+- name: Ensure py-docker is installed
+  pip:
+    name: docker
+
+- name: Ensure nginx is started and enabled
+  systemd:
+    name: nginx
+    state: started
+    enabled: true
+
+- name: Add nginx configuration for youtubedl-server
+  template:
+    src: nginx_youtubedl.conf.j2
+    dest: /etc/nginx/conf.d/youtubedl-server.conf
+  notify: nginx_reload
+
+- name: Clone repository
+  git:
+    repo: '{{ youtubedl_git_repo }}'
+    dest: '{{ youtubedl_container_build_dir }}'
+  when: ansible_architecture != 'x86_64' or youtubedl_build_from_repo
+
+- name: Build youtube-dl-server if not on x86_64
+  docker_image:
+    name: nbr23/youtube-dl-server
+    source: build
+    build:
+      path: '{{ youtubedl_container_build_dir }}'
+      pull: true
+    force_source: true
+  when: ansible_architecture != 'x86_64' or youtubedl_build_from_repo
+
+- name: Remove repository
+  file:
+    path: '{{ youtubedl_container_build_dir }}'
+    state: absent
+  when: ansible_architecture != 'x86_64' or youtubedl_build_from_repo
+
+- name: Launch youtube-dl-server container
+  docker_container:
+    name: youtube-dl-server
+    image: nbr23/youtube-dl-server
+    memory: '{{ youtubedl_memory_limit }}'
+    restart_policy: unless-stopped
+    user: '{{ youtubedl_user_uid }}:{{ youtubedl_user_gid }}'
+    ports:
+      - '127.0.0.1:{{ youtubedl_docker_port }}:8080'
+    volumes:
+      - '{{ youtubedl_host_data_dir }}:/youtube-dl'
+    env:
+      PYTHONPATH: /youtube-dl/.python
+      YDL_PYTHONPATH: /youtube-dl/.python
