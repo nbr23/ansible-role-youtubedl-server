@@ -1,0 +1,34 @@
+server {
+  listen 443 http2;
+  listen [::]:443 http2;
+  server_name {{ youtubedl_server_name }};
+
+  ssl on;
+  ssl_certificate {{ youtubedl_tls_cert_dir }}/{{ youtubedl_server_name }}/fullchain.pem;
+  ssl_certificate_key {{ youtubedl_tls_cert_dir }}/{{ youtubedl_server_name }}/privkey.pem;
+
+  access_log /var/log/nginx/{{ youtubedl_server_name }}.access.log;
+  autoindex off;
+
+{% if youtubedl_auth_basic %}
+  auth_basic           "Authentication";
+  auth_basic_user_file {{ youtubedl_auth_basic_file_path }};
+{% endif %}
+
+{% if youtubedl_nginx_allow %}
+{% for rule in youtubedl_nginx_allow %}
+  allow {{ rule }};
+{% endfor %}
+{% endif %}
+{% if youtubedl_nginx_deny %}
+{% for rule in youtubedl_nginx_deny %}
+  deny {{ rule }};
+{% endfor %}
+{% endif %}
+
+  location / {
+    proxy_redirect http://{{ youtubedl_server_name }} https://$host;
+    proxy_set_header Host $host;
+    proxy_pass http://localhost:{{ youtubedl_docker_port }};
+  }
+}
