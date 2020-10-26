@@ -1,31 +1,43 @@
 ansible-role-youtubedl-server
 =========
 
-Installs and sets up https://github.com/nbr23/youtube-dl-server
-
-Requirements
-------------
-
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+Deploy [youtube-dl-server](https://github.com/nbr23/youtube-dl-server) using
+docker and nginx.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
-
-Dependencies
-------------
-
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+- `youtubedl_build_from_repo`: Force docker image build from git repository
+- `youtubedl_git_repo`: Url of git repository to build for if
+  `youtubedl_build_from_repo` is true or if the platform is not 64bit x86.
+- `youtubedl_container_build_dir`: Temporary directory for docker image build
+  if building from repository
+- `youtubedl_server_name`: Domain name hosting youtube-dl-server
+- `youtubedl_tls_cert_dir`: Directory storing the TLS keychain and private key
+- `youtubedl_auth_basic`: Enable basic authentication
+- `youtubedl_auth_basic_file_path`: Path to the basic authentication file
+- `youtubedl_nginx_allow`: List of nginx allow rules target
+- `youtubedl_nginx_deny`: List of nginx deny rules target
+- `youtubedl_docker_port`: Port to use for the docker container
+- `youtubedl_user_uid`: run container with specific UID
+- `youtubedl_user_gid`: run container with specific GID
+- `youtubedl_memory_limit`: Memory limitation for the container
+- `youtubedl_host_data_dir`: Host directory to mount as data directory.
+  Downloaded media will be stored there
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+```
+---
+- hosts: all
+  gather_facts: false
+  become: true
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+  roles:
+  - role: ansible-role-youtubedl-server
+```
+
 
 License
 -------
