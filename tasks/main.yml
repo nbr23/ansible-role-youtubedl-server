@@ -27,11 +27,12 @@
   git:
     repo: '{{ youtubedl_git_repo }}'
     dest: '{{ youtubedl_container_build_dir }}'
+    version: '{{ youtubedl_git_branch }}'
   when: ansible_architecture != 'x86_64' or youtubedl_build_from_repo
 
 - name: Build youtube-dl-server if not on x86_64
   docker_image:
-    name: nbr23/youtube-dl-server
+    name: '{{ youtubedl_dockerhub_image }}'
     source: build
     build:
       path: '{{ youtubedl_container_build_dir }}'
@@ -48,7 +49,7 @@
 - name: Launch youtube-dl-server container
   docker_container:
     name: youtube-dl-server
-    image: nbr23/youtube-dl-server
+    image: '{{ youtubedl_dockerhub_image }}'
     memory: '{{ youtubedl_memory_limit }}'
     restart_policy: unless-stopped
     user: '{{ youtubedl_user_uid }}:{{ youtubedl_user_gid }}'
