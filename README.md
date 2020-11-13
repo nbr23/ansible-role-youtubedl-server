@@ -11,6 +11,8 @@ Role Variables
 - `youtubedl_git_repo`: Url of git repository to build for if
   `youtubedl_build_from_repo` is true or if the platform is not 64bit x86.
 - `youtubedl_git_branch`: Use a specific git branch to build from
+- `youtubedl_build_youtubedl`: Youtube-dl fork to use (`youtube-dl` or
+  `youtube-dlc`) when building from the repo
 - `youtubedl_dockerhub_image`: Use a specific image and tag from docker hub
 - `youtubedl_container_build_dir`: Temporary directory for docker image build
   if building from repository

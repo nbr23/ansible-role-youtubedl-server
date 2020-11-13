@@ -2,6 +2,7 @@
 youtubedl_build_from_repo: false
 youtubedl_git_repo: https://github.com/nbr23/youtube-dl-server.git
 youtubedl_git_branch: master
+youtubedl_build_youtubedl: youtube-dl
 youtubedl_dockerhub_image: nbr23/youtube-dl-server:latest
 youtubedl_container_build_dir: /tmp/youtube-dl-server
 youtubedl_server_name: video.example.org

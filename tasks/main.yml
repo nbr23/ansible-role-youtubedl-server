@@ -37,6 +37,8 @@
     build:
       path: '{{ youtubedl_container_build_dir }}'
       pull: true
+      args:
+        YOUTUBE_DL: '{{ youtubedl_build_youtubedl }}'
     force_source: true
   when: ansible_architecture != 'x86_64' or youtubedl_build_from_repo
 
