@@ -48,6 +48,31 @@
     state: absent
   when: ansible_architecture != 'x86_64' or youtubedl_build_from_repo
 
+- name: Create host configuration directory
+  file:
+    path: '{{ youtubedl_config_host_location | dirname }}'
+    state: directory
+  when: youtubedl_config_host_location is defined
+
+- name: Push youtube-dl configuration
+  copy:
+    src: '{{ youtubedl_configfile }}'
+    dest: '{{ youtubedl_config_host_location }}'
+    mode: 644
+  when: youtubedl_config_host_location is defined
+
+- name: Create container volume list
+  set_fact:
+    volumes:
+      - '{{ youtubedl_host_data_dir }}:/youtube-dl'
+
+- name: Add config volume if set
+  set_fact:
+    volumes:
+      - '{{ youtubedl_host_data_dir }}:/youtube-dl'
+      - '{{ youtubedl_config_host_location }}:/usr/src/app/config.yml:ro'
+  when: youtubedl_config_host_location is defined
+
 - name: Launch youtube-dl-server container
   docker_container:
     name: youtube-dl-server
@@ -57,8 +82,8 @@
     user: '{{ youtubedl_user_uid }}:{{ youtubedl_user_gid }}'
     ports:
       - '127.0.0.1:{{ youtubedl_docker_port }}:8080'
-    volumes:
-      - '{{ youtubedl_host_data_dir }}:/youtube-dl'
+    volumes: '{{ volumes }}'
+    state: started
     env:
       PYTHONPATH: /youtube-dl/.python
       YDL_PYTHONPATH: /youtube-dl/.python

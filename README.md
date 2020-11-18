@@ -28,6 +28,10 @@ Role Variables
 - `youtubedl_memory_limit`: Memory limitation for the container
 - `youtubedl_host_data_dir`: Host directory to mount as data directory.
   Downloaded media will be stored there
+- `youtubedl_config_host_location`: If uncommented and set, enables overwriting
+  the container's default config.yml file to set own youtube-dl call settings.
+- `youtubedl_configfile`: Overwrite to push your own config.yml when
+  `youtubedl_config_host_location` is set.
 
 Example Playbook
 ----------------

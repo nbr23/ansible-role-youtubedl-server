@@ -18,3 +18,5 @@ youtubedl_user_uid: 1000
 youtubedl_user_gid: 1000
 youtubedl_memory_limit: 512M
 youtubedl_host_data_dir: /data
+# youtubedl_config_host_location: /etc/youtube-dl-server/config.yml
+youtubedl_configfile: files/config.yml
