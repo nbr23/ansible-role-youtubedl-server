@@ -60,6 +60,7 @@
     dest: '{{ youtubedl_config_host_location }}'
     mode: 644
   when: youtubedl_config_host_location is defined
+  register: config_pushed
 
 - name: Create container volume list
   set_fact:
@@ -84,6 +85,7 @@
       - '127.0.0.1:{{ youtubedl_docker_port }}:8080'
     volumes: '{{ volumes }}'
     state: started
+    restart: '{{ config_pushed.changed }}'
     env:
       PYTHONPATH: /youtube-dl/.python
       YDL_PYTHONPATH: /youtube-dl/.python
