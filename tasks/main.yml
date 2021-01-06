@@ -89,3 +89,4 @@
     env:
       PYTHONPATH: /youtube-dl/.python
       YDL_PYTHONPATH: /youtube-dl/.python
+      YDL_CONFIG_PATH: /usr/src/app/config.yml
