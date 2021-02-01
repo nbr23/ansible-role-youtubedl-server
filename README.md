@@ -13,6 +13,8 @@ Role Variables
 - `youtubedl_git_branch`: Use a specific git branch to build from
 - `youtubedl_build_youtubedl`: Youtube-dl fork to use (`youtube-dl` or
   `youtube-dlc`) when building from the repo
+- `youtubedl_build_atomicparsley`: Add atomicparsley to the image
+(necessary for the `--embed-thumbnail` flag)
 - `youtubedl_dockerhub_image`: Use a specific image and tag from docker hub
 - `youtubedl_container_build_dir`: Temporary directory for docker image build
   if building from repository

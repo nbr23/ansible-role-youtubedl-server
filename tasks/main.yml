@@ -39,6 +39,7 @@
       pull: true
       args:
         YOUTUBE_DL: '{{ youtubedl_build_youtubedl }}'
+        ATOMICPARSLEY: '{{ youtubedl_build_atomicparsley | int }}'
     force_source: true
   when: ansible_architecture != 'x86_64' or youtubedl_build_from_repo
 
