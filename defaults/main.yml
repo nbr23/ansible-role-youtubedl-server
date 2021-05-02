@@ -7,7 +7,8 @@ youtubedl_build_atomicparsley: false
 youtubedl_dockerhub_image: nbr23/youtube-dl-server:latest
 youtubedl_container_build_dir: /tmp/youtube-dl-server
 youtubedl_server_name: video.example.org
-youtubedl_tls_cert_dir: /srv/cert
+youtubedl_tls_cert: /srv/cert/cert.crt
+youtubedl_tls_key: /srv/cert/key.key
 youtubedl_auth_basic: false
 youtubedl_auth_basic_file_path: ''
 youtubedl_nginx_allow:
