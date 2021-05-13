@@ -28,7 +28,7 @@
     repo: '{{ youtubedl_git_repo }}'
     dest: '{{ youtubedl_container_build_dir }}'
     version: '{{ youtubedl_git_branch }}'
-  when: ansible_architecture != 'x86_64' or youtubedl_build_from_repo
+  when: youtubedl_build_from_repo
 
 - name: Build youtube-dl-server if not on x86_64
   docker_image:
@@ -41,13 +41,13 @@
         YOUTUBE_DL: '{{ youtubedl_build_youtubedl }}'
         ATOMICPARSLEY: '{{ youtubedl_build_atomicparsley | int }}'
     force_source: true
-  when: ansible_architecture != 'x86_64' or youtubedl_build_from_repo
+  when: youtubedl_build_from_repo
 
 - name: Remove repository
   file:
     path: '{{ youtubedl_container_build_dir }}'
     state: absent
-  when: ansible_architecture != 'x86_64' or youtubedl_build_from_repo
+  when: youtubedl_build_from_repo
 
 - name: Create host configuration directory
   file:
