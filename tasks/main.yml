@@ -30,7 +30,7 @@
     version: '{{ youtubedl_git_branch }}'
   when: youtubedl_build_from_repo
 
-- name: Build youtube-dl-server if not on x86_64
+- name: Build youtube-dl-server image
   docker_image:
     name: '{{ youtubedl_dockerhub_image }}'
     source: build
@@ -78,6 +78,7 @@
 - name: Launch youtube-dl-server container
   docker_container:
     name: youtube-dl-server
+    pull: '{{ not youtubedl_build_from_repo }}'
     image: '{{ youtubedl_dockerhub_image }}'
     memory: '{{ youtubedl_memory_limit }}'
     restart_policy: unless-stopped
