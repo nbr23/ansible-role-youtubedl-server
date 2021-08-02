@@ -1,9 +1,8 @@
 ---
-- name: Ensure nginx, docker, pip are installed
+- name: Ensure nginx, pip are installed
   package:
     name:
       - nginx
-      - docker.io
       - python3-pip
     state: present
 
