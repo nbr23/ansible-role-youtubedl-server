@@ -31,9 +31,11 @@ Role Variables
 - `youtubedl_host_data_dir`: Host directory to mount as data directory.
   Downloaded media will be stored there
 - `youtubedl_config_host_location`: If uncommented and set, enables overwriting
-  the container's default config.yml file to set own youtube-dl call settings.
-- `youtubedl_configfile`: Overwrite to push your own config.yml when
-  `youtubedl_config_host_location` is set.
+  the container's default config.yml file to set own youtube-dl-server settings.
+- `ydl_server` and `ydl_options`: Dictionnaries containing your youtube-dl-server
+configurations. Refer to the
+[youtube-dl-server](https://github.com/nbr23/youtube-dl-server/blob/master/README.md#configuration)
+documentation.
 
 Example Playbook
 ----------------

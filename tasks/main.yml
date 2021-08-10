@@ -54,9 +54,14 @@
     state: directory
   when: youtubedl_config_host_location is defined
 
+- name: Add metadata location setting
+  set_fact:
+    ydl_server_defaults: '{{ ydl_server_defaults | combine({"metadata_db_path": "/app/metadata/.ydl-metadata.db"}) }}'
+  when: youtubedl_metadata_db_dir is defined and youtubedl_metadata_db_dir | length > 0
+
 - name: Push youtube-dl configuration
-  copy:
-    src: '{{ youtubedl_configfile }}'
+  template:
+    src: 'youtube-dl-server.config.yml.j2'
     dest: '{{ youtubedl_config_host_location }}'
     mode: 644
   when: youtubedl_config_host_location is defined
@@ -69,10 +74,24 @@
 
 - name: Add config volume if set
   set_fact:
-    volumes:
-      - '{{ youtubedl_host_data_dir }}:/youtube-dl'
-      - '{{ youtubedl_config_host_location }}:/usr/src/app/config.yml:ro'
+    volumes: '{{ volumes + [youtubedl_config_host_location + ":/usr/src/app/config.yml:ro"] }}'
   when: youtubedl_config_host_location is defined
+
+- name: Create metadata directory
+  file:
+    path: '{{ youtubedl_metadata_db_dir }}'
+    state: directory
+    owner: '{{ youtubedl_user_uid }}'
+    group: '{{ youtubedl_user_gid }}'
+  when: youtubedl_metadata_db_dir is defined and youtubedl_metadata_db_dir | length > 0
+
+- name: Add metadata mapping if set
+  set_fact:
+    volumes: '{{ volumes + [youtubedl_metadata_db_dir + ":/app/metadata"] }}'
+  when: youtubedl_metadata_db_dir is defined and youtubedl_metadata_db_dir | length > 0
+
+- debug:
+    var: volumes
 
 - name: Launch youtube-dl-server container
   docker_container:

@@ -1,0 +1,4 @@
+# ANSIBLE MANAGED
+{{ {'ydl_server': ydl_server_defaults | combine(ydl_server | default({}))} | to_nice_yaml }}
+
+{{ {'ydl_options': ydl_options_defaults | combine(ydl_options | default({}))} | to_nice_yaml }}
