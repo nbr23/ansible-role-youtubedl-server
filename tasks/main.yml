@@ -70,11 +70,13 @@
 - name: Create container volume list
   set_fact:
     volumes:
-      - '{{ youtubedl_host_data_dir }}:/youtube-dl'
+      - source: '{{ youtubedl_host_data_dir }}'
+        target: /youtube-dl
+        type: bind
 
 - name: Add config volume if set
   set_fact:
-    volumes: '{{ volumes + [youtubedl_config_host_location + ":/usr/src/app/config.yml:ro"] }}'
+    volumes: '{{ volumes + [{"source": youtubedl_config_host_location, "target": "/usr/src/app/config.yml", "type": "bind", "read_only": true}] }}'
   when: youtubedl_config_host_location is defined
 
 - name: Create metadata directory
@@ -87,7 +89,7 @@
 
 - name: Add metadata mapping if set
   set_fact:
-    volumes: '{{ volumes + [youtubedl_metadata_db_dir + ":/app/metadata"] }}'
+    volumes: '{{ volumes + [{"source": youtubedl_metadata_db_dir, "target": "/app/metadata", "type": "bind"}] }}'
   when: youtubedl_metadata_db_dir is defined and youtubedl_metadata_db_dir | length > 0
 
 - debug:
@@ -103,7 +105,7 @@
     user: '{{ youtubedl_user_uid }}:{{ youtubedl_user_gid }}'
     ports:
       - '127.0.0.1:{{ youtubedl_docker_port }}:8080'
-    volumes: '{{ volumes }}'
+    mounts: '{{ volumes }}'
     state: started
     restart: '{{ config_pushed.changed }}'
     env:
