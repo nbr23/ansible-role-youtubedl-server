@@ -109,6 +109,6 @@
     state: started
     restart: '{{ config_pushed.changed }}'
     env:
-      PYTHONPATH: /youtube-dl/.python
-      YDL_PYTHONPATH: /youtube-dl/.python
+      PYTHONPATH: /app/metadata/.python
+      YDL_PYTHONPATH: /app/metadata/.python
       YDL_CONFIG_PATH: /usr/src/app/config.yml
